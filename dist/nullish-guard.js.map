@@ -1,0 +1,1 @@
+{"version":3,"file":"nullish-guard.js","sourceRoot":"","sources":["../nullish-guard.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,YAAY;IACrB,MAAM,CAAC,KAAK,CAAC,KAAU,EAAE,IAAY;QACjC,IAAI,OAAM,CAAC,KAAK,CAAC,KAAK,WAAW,IAAI,KAAK,KAAK,IAAI,EAAE;YACjD,MAAM,IAAI,KAAK,CAAC,GAAG,IAAI,wBAAwB,CAAC,CAAC;SACpD;IACL,CAAC;CACJ"}
