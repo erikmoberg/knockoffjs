@@ -32,7 +32,7 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
         }
     }
 
-    state: T;
+    protected state: T;
 
     async connectedCallback(): Promise<void> {
         this.shadowRoot.innerHTML = `<style>${this.styles()}</style>${this.template()}`;
@@ -43,9 +43,9 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
 
     abstract styles(): string;
 
-    templateCache = new Map<Node, string>();
+    private templateCache = new Map<Node, string>();
 
-    updateBindings(propName: string = null, node: ParentNode = null, context: any = null, alias: string = null) {
+    private updateBindings(propName: string = null, node: ParentNode = null, context: any = null, alias: string = null) {
         const nodes = (node ?? this.shadowRoot).querySelectorAll("[data-bind]");
         for (const n of nodes) {
             const nodeValue = n.attributes["data-bind"].nodeValue as string;
@@ -113,7 +113,8 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
             });
         }
     }
-    getBindingsFromValue(nodeValue: string) {
+
+    private getBindingsFromValue(nodeValue: string) {
         let nodeValueWithObjectsSeparatedBySemicolon = "";
         let inObject = false;
         for (let i = 0; i < nodeValue.length; i++) {
@@ -128,10 +129,11 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
 
             nodeValueWithObjectsSeparatedBySemicolon += nodeValue[i];
         }
-        //const nodeValueWithObjectsSeparatedBySemicolon = nodeValue.replace(/({.*?)(,)(.*?})/gi, "$1;$3"); // Replace commas inside objects with semicolons
+        
         return nodeValueWithObjectsSeparatedBySemicolon.split(",").map(s => s.trim());
     }
-    processObjectBinding(
+
+    private processObjectBinding(
         alias: string,
         context: any,
         propertyName: string,
@@ -174,8 +176,6 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
         };
 
         const cleanPropertyName = alias ? propertyName.replace(`${alias}.`, "") : propertyName;
-
-        // todo: remove eval
         let bindingTarget = context ? traverse(context, cleanPropertyName) : traverse(this.state, cleanPropertyName);
 
         if (bindingTarget === undefined) {
