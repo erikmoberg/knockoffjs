@@ -95,7 +95,12 @@ export class KnockoffJsBase extends HTMLElement {
                     else {
                         const bindingTarget = this.getBindingTarget(alias, propertyName, context);
                         const value = bindingTarget instanceof Function ? bindingTarget(context) : bindingTarget;
-                        n[binding] = value;
+                        const bindingPath = binding.split(".");
+                        let targetProperty = n;
+                        for (const p of bindingPath) {
+                            targetProperty = targetProperty[p];
+                        }
+                        targetProperty = value;
                     }
                 }
             }
@@ -126,7 +131,6 @@ export class KnockoffJsBase extends HTMLElement {
             }
             nodeValueWithObjectsSeparatedBySemicolon += nodeValue[i];
         }
-        //const nodeValueWithObjectsSeparatedBySemicolon = nodeValue.replace(/({.*?)(,)(.*?})/gi, "$1;$3"); // Replace commas inside objects with semicolons
         return nodeValueWithObjectsSeparatedBySemicolon.split(",").map(s => s.trim());
     }
     processObjectBinding(alias, context, propertyName, process) {
@@ -165,7 +169,6 @@ export class KnockoffJsBase extends HTMLElement {
             return cur;
         };
         const cleanPropertyName = alias ? propertyName.replace(`${alias}.`, "") : propertyName;
-        // todo: remove eval
         let bindingTarget = context ? traverse(context, cleanPropertyName) : traverse(this.state, cleanPropertyName);
         if (bindingTarget === undefined) {
             bindingTarget = this[cleanPropertyName];

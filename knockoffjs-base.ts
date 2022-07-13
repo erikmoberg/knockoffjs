@@ -97,7 +97,13 @@ export abstract class KnockoffJsBase<T extends object> extends HTMLElement {
                     } else {
                         const bindingTarget = this.getBindingTarget(alias, propertyName, context);
                         const value = bindingTarget instanceof Function ? bindingTarget(context) : bindingTarget;
-                        n[binding] = value;
+                        const bindingPathParts = binding.split(".");
+                        let targetProperty = n;
+                        for (let i = 0; i < bindingPathParts.length - 1; i++) {
+                            targetProperty = targetProperty[bindingPathParts[i]];
+                        }
+
+                        targetProperty[bindingPathParts[bindingPathParts.length - 1]] = value;
                     }
                 }
             }
